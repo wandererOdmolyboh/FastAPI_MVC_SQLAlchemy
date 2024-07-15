@@ -4,11 +4,11 @@ from sqlalchemy.orm import relationship
 from src.database import Base
 
 
-class Post(Base):
+class PostDB(Base):
     __tablename__ = 'posts'
 
     id = Column(Integer, primary_key=True, index=True)
-    text = Column(String)
+    text = Column(String(255))
     owner_id = Column(Integer, ForeignKey('users.id'))
 
-    owner = relationship("User", back_populates="posts")
+    owner = relationship("UserDB", back_populates="messages")
