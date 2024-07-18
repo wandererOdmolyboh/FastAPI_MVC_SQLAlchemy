@@ -14,6 +14,14 @@ class UserController:
             db_session: AsyncSession,
             sex: SexEnum | None = None
     ):
+        """
+        Get a list of users, optionally filtered by sex.
+
+        :param db_session: The database session.
+        :param sex: The sex to filter by. If None, no filtering is applied.
+        :return: A list of users.
+        :raise HTTPException: If an error occurred.
+        """
         query = select(UserDB)
         if sex is not None:
             query = query.where(UserDB.sex == sex)
@@ -27,7 +35,14 @@ class UserController:
 
     @staticmethod
     async def create_user(db_session: AsyncSession, user_create: UserCreate):
+        """
+        Create a new user.
 
+        :param db_session: The database session.
+        :param user_create: The user to create.
+        :return: The created user.
+        :raise HTTPException: If an error occurred.
+        """
         try:
             db_user = UserDB(**user_create.dict())
             db_session.add(db_user)
@@ -41,6 +56,14 @@ class UserController:
 
     @staticmethod
     async def get_user_detail_by_name(db_session: AsyncSession, username: str):
+        """
+        Get the details of a user by their username.
+
+        :param db_session: The database session.
+        :param username: The username of the user.
+        :return: The details of the user, or None if the user is not found.
+        :raise HTTPException: If an error occurred.
+        """
         query = select(UserDB).where(UserDB.username == username)
         try:
             result = await db_session.execute(query)
@@ -51,6 +74,14 @@ class UserController:
 
     @staticmethod
     async def get_user_detail_by_id(db_session: AsyncSession, user_id: int):
+        """
+        Get the details of a user by their ID.
+
+        :param db_session: The database session.
+        :param user_id: The ID of the user.
+        :return: The details of the user, or None if the user is not found.
+        :raise HTTPException: If an error occurred.
+        """
         query = select(UserDB).where(UserDB.id == user_id)
         try:
             result = await db_session.execute(query)

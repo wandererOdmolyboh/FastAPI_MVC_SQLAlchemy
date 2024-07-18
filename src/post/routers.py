@@ -20,6 +20,14 @@ async def delete_post(
         current_user: UserRead = Depends(get_current_user),
         db: AsyncSession = Depends(get_async_session)
 ):
+    """
+    Delete a specific post by its ID.
+
+    :param post_id: The ID of the post to delete.
+    :param current_user: The current logged in user.
+    :param db: The database session.
+    :return: None
+    """
     await user_controller.delete_post(db=db, post_id=post_id, user_id=current_user.id)
 
 
@@ -28,6 +36,13 @@ async def get_messages(
         current_user: UserRead = Depends(get_current_user),
         db: AsyncSession = Depends(get_async_session)
 ):
+    """
+    Get a list of all posts.
+
+    :param current_user: The current logged-in user.
+    :param db: The database session.
+    :return: A list of all posts.
+    """
     messages = await user_controller.get_all_posts(db, current_user.id)
     return messages
 
@@ -38,6 +53,14 @@ async def create_message(
         current_user: UserRead = Depends(get_current_user),
         db: AsyncSession = Depends(get_async_session)
 ):
+    """
+    Create a new post.
+
+    :param post: The post to create.
+    :param current_user: The current logged-in user.
+    :param db: The database session.
+    :return: The ID of the created post.
+    """
     created_post_id = await user_controller.create_posts(db=db, post=post, current_user=current_user)
 
     return created_post_id

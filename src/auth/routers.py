@@ -59,6 +59,18 @@ async def signup(
         user: UserCreate,
         db: AsyncSession = Depends(get_async_session),
 ):
+    """
+    Create a new user and generate an access token for them.
+
+    The user must provide their username, email, and password.
+    If the username and email are unique and the password is valid,
+    a new user is created, an access token is generated and returned.
+
+    :param user: The user to create.
+    :param db: The database session.
+    :return: A dictionary containing the access token, the token type, and the created user.
+    :raise HTTPException: If the user with provided username or email already exists.
+    """
     try:
         created_user = await user_controller.create_user(db_session=db, user_create=user)
         access_token = create_access_token(payload={"user_id": created_user.id})

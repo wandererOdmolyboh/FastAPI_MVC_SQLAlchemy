@@ -12,7 +12,8 @@ app.include_router(router=user_router)
 app.include_router(router=auth_router)
 
 
-@app.get("/", summary="Root Endpoint", description="This is the root endpoint of the API.")
+@app.get("/", summary="Root Endpoint",
+         description="This is the root endpoint of the API. It returns a welcome message.")
 async def root():
     return {"message": "Hello Guys!"}
 
