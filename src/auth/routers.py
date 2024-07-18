@@ -7,7 +7,7 @@ from src.auth.oauth2 import create_access_token
 from src.auth.utils import verify_password
 from src.dependencies import get_async_session
 from src.user.controller import UserController
-from src.user.schemas import UserCreate, UserRead
+from src.user.schemas import UserCreate
 
 user_controller = UserController()
 router = APIRouter(tags=["authentication"])
@@ -47,7 +47,7 @@ async def get_token(
             plain_password=request.password,
             hashed_password=user.password
     ):
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect password")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Problem with authentication")
 
     access_token = create_access_token(payload={"user_id": user.id})
 
@@ -64,5 +64,5 @@ async def signup(
         access_token = create_access_token(payload={"user_id": created_user.id})
         return {"access_token": access_token, "token_type": "bearer", "user": created_user}
     except Exception as e:
-        raise HTTPException(status_code=400,
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,
                             detail=f"User with provided username or email already exists. An error occurred: {str(e)}")

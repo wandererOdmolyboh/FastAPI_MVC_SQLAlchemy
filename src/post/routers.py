@@ -10,25 +10,6 @@ from src.post.schemas import PostsGet
 from src.user.schemas import UserRead
 
 router = APIRouter(tags=["post"])
-
-#   AddPost Endpoint:
-#     Accepts `text` and a `token` for authentication.
-#     Validates payload size (limit to 1 MB), saves the post in memory, returning `postID`.
-#     Returns an error for invalid or missing token.
-#     Dependency injection for token authentication.
-#   GetPosts Endpoint:
-#     Requires a token for authentication.
-#     Returns all user's posts.
-#     Implements response caching for up to 5 minutes for the same user.
-#     Returns an error for invalid or missing token.
-#     Dependency injection for token authentication.
-#
-#   DeletePost Endpoint:
-#     Accepts `postID` and a `token` for authentication.
-#     Deletes the corresponding post from memory.
-#     Returns an error for invalid or missing token.
-#     Dependency injection for token authentication.
-
 user_controller = PostsController()
 
 

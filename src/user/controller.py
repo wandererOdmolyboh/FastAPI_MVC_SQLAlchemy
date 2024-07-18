@@ -1,3 +1,4 @@
+from starlette import status
 from sqlalchemy import select
 from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,7 +21,8 @@ class UserController:
             user_list = await db_session.execute(query)
             return user_list.scalars().all()
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                                detail=f"An error occurred: {str(e)}")
 
     @staticmethod
     async def create_user(db_session: AsyncSession, user_create: UserCreate):
@@ -33,7 +35,8 @@ class UserController:
             return db_user
         except Exception as e:
             await db_session.rollback()
-            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                                detail=f"An error occurred: {str(e)}")
 
     @staticmethod
     async def get_user_detail_by_name(db_session: AsyncSession, username: str):
@@ -42,7 +45,8 @@ class UserController:
             result = await db_session.execute(query)
             return result.scalar_one_or_none()
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                                detail=f"An error occurred: {str(e)}")
 
     @staticmethod
     async def get_user_detail_by_id(db_session: AsyncSession, user_id: int):
@@ -51,4 +55,5 @@ class UserController:
             result = await db_session.execute(query)
             return result.scalar_one_or_none()
         except Exception as e:
-            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+            raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                                detail=f"An error occurred: {str(e)}")
