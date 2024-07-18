@@ -7,19 +7,12 @@ from src.auth.oauth2 import create_access_token
 from src.auth.utils import verify_password
 from src.dependencies import get_async_session
 from src.user.controller import UserController
+from src.user.schemas import UserCreate, UserRead
 
 user_controller = UserController()
 router = APIRouter(tags=["authentication"])
 
 
-#   Signup Endpoint:
-#     Accepts `email` and `password`.
-#     Returns a token (JWT or randomly generated string).
-#
-#
-#   Login Endpoint:
-#     Accepts `email` and `password`.
-#     Returns a token upon successful login; error response if login fails.
 @router.post("/login")
 async def get_token(
         request: OAuth2PasswordRequestForm = Depends(),
@@ -58,4 +51,18 @@ async def get_token(
 
     access_token = create_access_token(payload={"user_id": user.id})
 
-    return {"access_token": access_token, "token_type": "bearer", "user": user.id}
+    return {"access_token": access_token, "token_type": "bearer"}
+
+
+@router.post("/signup", status_code=status.HTTP_201_CREATED)
+async def signup(
+        user: UserCreate,
+        db: AsyncSession = Depends(get_async_session),
+):
+    try:
+        created_user = await user_controller.create_user(db_session=db, user_create=user)
+        access_token = create_access_token(payload={"user_id": created_user.id})
+        return {"access_token": access_token, "token_type": "bearer", "user": created_user}
+    except Exception as e:
+        raise HTTPException(status_code=400,
+                            detail=f"User with provided username or email already exists. An error occurred: {str(e)}")

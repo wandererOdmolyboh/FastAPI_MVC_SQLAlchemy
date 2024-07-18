@@ -1,8 +1,8 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class PostsCreate(BaseModel):
-    text: str
+    text: str = Field(..., max_length=1024*1024)
     user_id: int
 
 

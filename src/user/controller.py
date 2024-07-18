@@ -26,7 +26,7 @@ class UserController:
     async def create_user(db_session: AsyncSession, user_create: UserCreate):
 
         try:
-            db_user = UserDB(text=user_create.text, owner_id=user_create.id)
+            db_user = UserDB(**user_create.dict())
             db_session.add(db_user)
             await db_session.commit()
             await db_session.refresh(db_user)

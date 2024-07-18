@@ -12,18 +12,6 @@ router = APIRouter(tags=["users"])
 user_controller = UserController()
 
 
-@router.post("/users/", response_model=UserRead, status_code=status.HTTP_201_CREATED)
-async def create_user(
-        user: UserCreate,
-        db: AsyncSession = Depends(get_async_session),
-):
-
-    try:
-        return await user_controller.create_user(db_session=db, user_create=user)
-    except IntegrityError:
-        raise HTTPException(status_code=400, detail="User with provided username or email already exists")
-
-
 @router.get("/users/", response_model=list[UserRead])
 async def get_all_users(
         current_user: UserRead = Depends(get_current_user),

@@ -32,21 +32,30 @@ router = APIRouter(tags=["post"])
 user_controller = PostsController()
 
 
-@router.get("/messages/", response_model=list[PostsGet])
+@router.delete("/posts/{post_id}/", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_post(
+        post_id: int,
+        current_user: UserRead = Depends(get_current_user),
+        db: AsyncSession = Depends(get_async_session)
+):
+    await user_controller.delete_post(db=db, post_id=post_id, user_id=current_user.id)
+
+
+@router.get("/posts/", response_model=list[PostsGet])
 async def get_messages(
         current_user: UserRead = Depends(get_current_user),
         db: AsyncSession = Depends(get_async_session)
 ):
-    messages = await user_controller.get_all_messages(db)
+    messages = await user_controller.get_all_posts(db, current_user.id)
     return messages
 
 
-@router.post("/message/", response_model=PostsGet, status_code=status.HTTP_201_CREATED)
+@router.post("/posts/", status_code=status.HTTP_201_CREATED)
 async def create_message(
-        message: schemas.PostsCreate,
+        post: schemas.PostsCreate,
         current_user: UserRead = Depends(get_current_user),
         db: AsyncSession = Depends(get_async_session)
 ):
-    created_message = await user_controller.create_message(db=db, message=message, current_user=current_user)
+    created_post_id = await user_controller.create_posts(db=db, post=post, current_user=current_user)
 
-    return created_message
+    return created_post_id
