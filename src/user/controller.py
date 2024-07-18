@@ -1,10 +1,11 @@
+from fastapi import HTTPException
+
 from starlette import status
 from sqlalchemy import select
-from fastapi import HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.user.models import UserDB, SexEnum
 from src.user.schemas import UserCreate
+from src.user.models import UserDB, SexEnum
 
 
 class UserController:

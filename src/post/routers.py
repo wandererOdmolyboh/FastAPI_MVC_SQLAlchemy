@@ -1,13 +1,14 @@
+from starlette import status
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette import status
 
 from src.auth.oauth2 import get_current_user
 from src.dependencies import get_async_session
+
 from src.post import schemas
-from src.post.controller import PostsController
 from src.post.schemas import PostsGet
 from src.user.schemas import UserRead
+from src.post.controller import PostsController
 
 router = APIRouter(tags=["post"])
 user_controller = PostsController()

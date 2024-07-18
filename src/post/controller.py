@@ -1,12 +1,14 @@
 import aiocache
+from starlette import status
 from fastapi import HTTPException
+
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from starlette import status
 
+from src.config import TIME_EXPIRE
 from src.post.models import PostDB
-from src.post.schemas import PostsCreate
 from src.user.schemas import UserRead
+from src.post.schemas import PostsCreate
 
 
 class PostsController:
@@ -31,7 +33,7 @@ class PostsController:
                                 detail=f"An error occurred: {str(e)}")
 
     @staticmethod
-    @aiocache.cached(ttl=300)
+    @aiocache.cached(ttl=TIME_EXPIRE)
     async def get_all_posts(db: AsyncSession, user_id: int):
         query = select(PostDB).where(PostDB.owner_id == user_id)
         try:
