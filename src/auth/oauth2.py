@@ -39,7 +39,7 @@ async def get_current_user(
     if user_id is None:
         raise_unauthorized_exception()
     else:
-        user = await user_controller.get_user_detail(db, user_id=user_id)
+        user = await user_controller.get_user_detail_by_id(db, user_id=user_id)
         if user is None:
             raise HTTPException(
                 status_code=404,

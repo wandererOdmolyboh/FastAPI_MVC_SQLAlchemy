@@ -44,10 +44,23 @@ class UserCreate(UserBase):
         from_attributes = True
 
 
-class UserRead(UserBase):
-
+class UserRead(BaseModel):
     username: str
     sex: SexEnum
+    id: int
+
+    class ConfigDict:
+        """
+        A nested class for Pydantic model configuration. The 'from_attributes' attribute is set to True, which means
+        that attributes of the model instance will be used to populate the dictionary when the model is converted to a
+        dictionary using the 'dict()' function.
+        """
+        from_attributes = True
+
+
+class UserAuth(BaseModel):
+    username: str
+    password: str
 
     class ConfigDict:
         """

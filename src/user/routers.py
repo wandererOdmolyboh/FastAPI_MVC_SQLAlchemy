@@ -38,7 +38,7 @@ async def user_detail(
         current_user: UserRead = Depends(get_current_user),
         db_session: AsyncSession = Depends(get_async_session)):
 
-    db_user = await user_controller.get_user_detail(db_session=db_session, user_id=user_id)
+    db_user = await user_controller.get_user_detail_by_id(db_session=db_session, user_id=user_id)
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
 

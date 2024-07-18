@@ -1,5 +1,5 @@
+from sqlalchemy import select
 from fastapi import HTTPException
-from sqlalchemy import select, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.user.models import UserDB, SexEnum
@@ -13,9 +13,9 @@ class UserController:
             sex: SexEnum | None = None
     ):
         query = select(UserDB)
-
         if sex is not None:
             query = query.where(UserDB.sex == sex)
+
         try:
             user_list = await db_session.execute(query)
             return user_list.scalars().all()
@@ -23,27 +23,30 @@ class UserController:
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
     @staticmethod
-    async def create_user(
-            db_session: AsyncSession,
-            user_create: UserCreate):
-
-        query = insert(UserDB).values(
-            **user_create.model_dump()
-        )
+    async def create_user(db_session: AsyncSession, user_create: UserCreate):
 
         try:
-            await db_session.execute(query)
+            db_user = UserDB(text=user_create.text, owner_id=user_create.id)
+            db_session.add(db_user)
             await db_session.commit()
-
-            return user_create
-
+            await db_session.refresh(db_user)
+            return db_user
         except Exception as e:
             await db_session.rollback()
             raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
 
     @staticmethod
-    async def get_user_detail(db_session: AsyncSession, username: str):
+    async def get_user_detail_by_name(db_session: AsyncSession, username: str):
         query = select(UserDB).where(UserDB.username == username)
+        try:
+            result = await db_session.execute(query)
+            return result.scalar_one_or_none()
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
+
+    @staticmethod
+    async def get_user_detail_by_id(db_session: AsyncSession, user_id: int):
+        query = select(UserDB).where(UserDB.id == user_id)
         try:
             result = await db_session.execute(query)
             return result.scalar_one_or_none()

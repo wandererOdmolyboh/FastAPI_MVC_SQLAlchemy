@@ -6,6 +6,6 @@ class PostsCreate(BaseModel):
     user_id: int
 
 
-class Posts(BaseModel):
-    id: int
+class PostsGet(BaseModel):
+    owner_id: int
     text: str

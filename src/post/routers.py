@@ -6,7 +6,7 @@ from src.auth.oauth2 import get_current_user
 from src.dependencies import get_async_session
 from src.post import schemas
 from src.post.controller import PostsController
-from src.post.schemas import Posts
+from src.post.schemas import PostsGet
 from src.user.schemas import UserRead
 
 router = APIRouter(tags=["post"])
@@ -32,7 +32,7 @@ router = APIRouter(tags=["post"])
 user_controller = PostsController()
 
 
-@router.get("/messages/", response_model=list[Posts])
+@router.get("/messages/", response_model=list[PostsGet])
 async def get_messages(
         current_user: UserRead = Depends(get_current_user),
         db: AsyncSession = Depends(get_async_session)
@@ -41,7 +41,7 @@ async def get_messages(
     return messages
 
 
-@router.post("/message/", response_model=Posts, status_code=status.HTTP_201_CREATED)
+@router.post("/message/", response_model=PostsGet, status_code=status.HTTP_201_CREATED)
 async def create_message(
         message: schemas.PostsCreate,
         current_user: UserRead = Depends(get_current_user),

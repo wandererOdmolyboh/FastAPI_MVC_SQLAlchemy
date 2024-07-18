@@ -40,7 +40,7 @@ async def get_token(
     Raises:
         HTTPException: If the user is not found or the password is incorrect.
     """
-    user = await user_controller.get_user_detail(
+    user = await user_controller.get_user_detail_by_name(
         db_session=session,
         username=request.username
     )
