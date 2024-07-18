@@ -1,13 +1,14 @@
+from starlette import status
+from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.ext.asyncio import AsyncSession
-from starlette import status
 
-from src.auth.oauth2 import create_access_token
 from src.auth.utils import verify_password
-from src.dependencies import get_async_session
-from src.user.controller import UserController
+from src.auth.oauth2 import create_access_token
+
 from src.user.schemas import UserCreate
+from src.user.controller import UserController
+from src.dependencies import get_async_session
 
 user_controller = UserController()
 router = APIRouter(tags=["authentication"])

@@ -1,11 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException
-from sqlalchemy.exc import IntegrityError
-from sqlalchemy.ext.asyncio import AsyncSession
 from starlette import status
+from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import APIRouter, Depends, HTTPException
 
+from src.user.schemas import UserRead
 from src.auth.oauth2 import get_current_user
 from src.user.controller import UserController
-from src.user.schemas import UserRead, UserCreate
 from src.dependencies import get_async_session
 
 router = APIRouter(tags=["users"])
